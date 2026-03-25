@@ -1,0 +1,28 @@
+# Session data (ephemeral, not version controlled)
+data/*
+!data/.gitkeep
+*.jsonl
+*.jsonl.1
+
+# Claude Code logs
+.claude/logs/
+
+# Node (root-level artifacts — real app lives in app/)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Crash recovery markers (per-project, created by flow commands)
+.planning/
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+sonar-project.properties
