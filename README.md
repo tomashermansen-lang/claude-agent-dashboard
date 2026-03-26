@@ -2,7 +2,7 @@
 
 Real-time monitoring dashboard for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) pipelines. Track autonomous sessions, view execution plans, stream live output, and analyze metrics — all from your browser.
 
-![Dashboard metrics view](https://tomashermansen-lang.github.io/portfolio/screenshots/dashboard-metrics.png)
+![Execution plan viewer](https://tomashermansen-lang.github.io/portfolio/screenshots/execution-graph-dashboard.png)
 
 > For architecture deep-dives and design decisions, see the [portfolio write-up](https://tomashermansen-lang.github.io/portfolio/projects/agent-dashboard.html).
 
