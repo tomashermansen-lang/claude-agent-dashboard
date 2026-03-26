@@ -33,6 +33,8 @@ Real-time monitoring dashboard for [Claude Code](https://docs.anthropic.com/en/d
 | git | 2.30+ | `xcode-select --install` |
 | PyYAML | — | `pip3 install pyyaml` |
 
+See [REQUIREMENTS.md](REQUIREMENTS.md) for the full list including frontend dependencies.
+
 ## Quick Start
 
 ```bash
