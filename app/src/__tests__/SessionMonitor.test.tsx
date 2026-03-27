@@ -27,7 +27,7 @@ const mockSessions: Session[] = [
     msg: 'Working on analysis',
     ts: new Date().toISOString(),
     status: 'working',
-    flow: { feature: 'analysis', phase: 'implement', phase_index: 3, total_phases: 7 },
+    flow: { feature: 'analysis', phase: 'implement', phase_index: 3, total_phases: 9 },
   },
   {
     sid: 's2',
@@ -39,7 +39,7 @@ const mockSessions: Session[] = [
     msg: 'Waiting for input',
     ts: new Date().toISOString(),
     status: 'needs_input',
-    flow: { feature: 'outliers', phase: 'qa', phase_index: 5, total_phases: 7 },
+    flow: { feature: 'outliers', phase: 'team-qa', phase_index: 6, total_phases: 9 },
   },
   {
     sid: 's3',

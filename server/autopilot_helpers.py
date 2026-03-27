@@ -18,8 +18,8 @@ PROJECTS_ROOT = Path(os.environ.get("PROJECTS_ROOT", str(Path.home() / "Projekte
 PHASE_ARTIFACTS = {
     "BA": "REQUIREMENTS.md",
     "Plan": "PLAN.md",
-    "Review": "REVIEW.md",
     "Team Review": "TEAM_REVIEW.md",
+    "Review": "REVIEW.md",
     "Static Analysis": "STATIC_ANALYSIS.md",
     "Team QA": "TEAM_QA.md",
     "QA": "QA_REPORT.md",
@@ -45,7 +45,6 @@ _COMMAND_TO_PHASE = {
     "team-review": "Team Review",
     "review": "Review",
     "implement": "Implement",  # also matches --step testplan via phase header
-    "done": "Done",
     "static-analysis": "Static Analysis",
     "manualtest": "Manual Test",
     "team-qa": "Team QA",

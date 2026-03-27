@@ -98,7 +98,9 @@ const SESSION_TO_TASK_STATUS: Record<string, string> = {
 
 const FLOW_LABELS: Record<string, string> = {
   started: 'Started', ba: 'BA', design: 'Design', plan: 'Plan',
-  implement: 'Impl', manualtest: 'Test', qa: 'QA', done: 'Done',
+  'team-review': 'T-Rev', review: 'Review', implement: 'Impl',
+  'static-analysis': 'SA', manualtest: 'Test', 'team-qa': 'T-QA',
+  commit: 'Commit', done: 'Done',
 }
 
 /* ═══ Shared chip styling (matches SessionMonitor) ═══ */

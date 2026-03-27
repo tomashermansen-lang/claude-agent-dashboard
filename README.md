@@ -12,7 +12,8 @@ Real-time monitoring dashboard for [Claude Code](https://docs.anthropic.com/en/d
 - **Session viewer** — live NDJSON streaming of tool calls, subagent activity, and phase transitions
 - **Execution plans** — renders YAML/JSON plans as dependency trackers with progress and gate evaluation
 - **Metrics (8 panels)** — tool usage, error rates, session lifecycle, permission friction, subagent utilization, file activity, task completion, activity timeline
-- **Phase artifacts** — renders REQUIREMENTS.md, PLAN.md, QA_REPORT.md etc. inline
+- **Phase artifacts** — renders REQUIREMENTS.md, PLAN.md, TEAM_REVIEW.md, TEAM_QA.md etc. inline
+- **Dynamic pipeline tracking** — automatically detects full (team) vs light (solo) pipeline and adjusts progress tracking accordingly
 
 ## Tech Stack
 

@@ -20,7 +20,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-FLOW_PHASES = ["ba", "design", "plan", "implement", "manualtest", "qa", "done"]
+# Phase sequences per pipeline type (determined by which review artifact exists)
+FLOW_PHASES_FULL = ["ba", "plan", "team-review", "implement", "static-analysis", "manualtest", "team-qa", "commit", "done"]
+FLOW_PHASES_LIGHT = ["ba", "plan", "review", "implement", "static-analysis", "qa", "commit", "done"]
+# Legacy fallback for sessions without clear pipeline type
+FLOW_PHASES = FLOW_PHASES_FULL
 
 
 def _resolve_worktree_root(cwd: str) -> str | None:
@@ -79,7 +83,12 @@ def _detect_flow_phase(worktree_root: str, branch: str) -> dict | None:
     # Check for DONE_ prefix first (with Feature_ type segment per convention)
     for prefix in (f"DONE_Feature_{feature}", f"DONE_{feature}"):
         if (docs_dir / prefix).is_dir():
-            return {"feature": feature, "phase": "done", "phase_index": 6, "total_phases": 7}
+            # Check done dir for pipeline type
+            done_dir = docs_dir / prefix
+            done_files = {f.name for f in done_dir.iterdir()} if done_dir.is_dir() else set()
+            is_full = "TEAM_REVIEW.md" in done_files or "TEAM_QA.md" in done_files
+            phases = FLOW_PHASES_FULL if is_full else FLOW_PHASES_LIGHT
+            return {"feature": feature, "phase": "done", "phase_index": len(phases) - 1, "total_phases": len(phases)}
 
     # Check for feature docs directory (convention: INPROGRESS_Feature_<name>)
     target_dir = None
@@ -93,7 +102,7 @@ def _detect_flow_phase(worktree_root: str, branch: str) -> dict | None:
             break
 
     if not target_dir:
-        return {"feature": feature, "phase": "started", "phase_index": 0, "total_phases": 7}
+        return {"feature": feature, "phase": "started", "phase_index": 0, "total_phases": len(FLOW_PHASES_FULL)}
 
     # Determine phase from which files exist
     has = set()
@@ -101,18 +110,29 @@ def _detect_flow_phase(worktree_root: str, branch: str) -> dict | None:
         for f in target_dir.iterdir():
             has.add(f.name)
     except Exception:
-        return {"feature": feature, "phase": "unknown", "phase_index": 0, "total_phases": 7}
+        return {"feature": feature, "phase": "unknown", "phase_index": 0, "total_phases": len(FLOW_PHASES_FULL)}
 
-    if "QA_REPORT.md" in has or "TEAM_QA.md" in has:
-        phase, idx = "qa", 5
+    # Detect pipeline type: TEAM_REVIEW.md → full, REVIEW.md → light
+    is_full = "TEAM_REVIEW.md" in has or "TEAM_QA.md" in has
+    is_light = not is_full and "REVIEW.md" in has
+    phases = FLOW_PHASES_LIGHT if is_light else FLOW_PHASES_FULL
+    total = len(phases)
+
+    # Determine current phase from artifact presence
+    if "TEAM_QA.md" in has:
+        phase, idx = "team-qa", phases.index("team-qa") if "team-qa" in phases else total - 2
     elif "MANUAL_TEST_LOG.md" in has:
-        phase, idx = "manualtest", 4
+        phase, idx = "manualtest", phases.index("manualtest") if "manualtest" in phases else total - 3
+    elif "STATIC_ANALYSIS.md" in has:
+        phase, idx = "static-analysis", phases.index("static-analysis") if "static-analysis" in phases else 4
     elif "TESTPLAN.md" in has:
-        phase, idx = "implement", 3
+        phase, idx = "implement", phases.index("implement") if "implement" in phases else 3
     elif "TEAM_REVIEW.md" in has:
-        phase, idx = "review", 2
+        phase, idx = "team-review", phases.index("team-review") if "team-review" in phases else 2
+    elif "REVIEW.md" in has:
+        phase, idx = "review", phases.index("review") if "review" in phases else 2
     elif "PLAN.md" in has:
-        phase, idx = "plan", 2
+        phase, idx = "plan", phases.index("plan") if "plan" in phases else 1
     elif "DESIGN.md" in has:
         phase, idx = "design", 1
     elif "REQUIREMENTS.md" in has:
@@ -120,7 +140,7 @@ def _detect_flow_phase(worktree_root: str, branch: str) -> dict | None:
     else:
         phase, idx = "started", 0
 
-    return {"feature": feature, "phase": phase, "phase_index": idx, "total_phases": 7}
+    return {"feature": feature, "phase": phase, "phase_index": idx, "total_phases": total}
 
 
 def _discover_worktrees(repo_root: str) -> list[dict]:
